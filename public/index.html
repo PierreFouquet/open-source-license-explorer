@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Open Source License Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Links to the external CSS file -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-stone-50 text-gray-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-teal-800 tracking-tight">Interactive Open Source License Explorer</h1>
+            <p class="text-gray-600 mt-1">Visually compare and select the right license for your project.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <section id="intro" class="mb-12 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold mb-3 text-gray-900">Welcome to the License Explorer</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Choosing an open-source license can be complex. This tool is designed to simplify that process by translating a detailed report into an interactive experience. Use the filters below to find licenses that match your project's needs. You can explore licenses based on their core philosophy:
+                <strong class="text-teal-700">Permissive</strong> licenses offer maximum freedom with minimal restrictions. 
+                <strong class="text-orange-700">Copyleft</strong> licenses require that derivative works are also shared under similar open terms. 
+                <strong class="text-sky-700">Public Domain</strong> equivalents aim to waive all copyright. Click on any card for a detailed breakdown.
+            </p>
+        </section>
+
+        <section id="filters" class="mb-8 bg-white p-6 rounded-lg shadow">
+            <h3 class="text-xl font-bold mb-4 text-gray-900">Filter Licenses By Your Needs</h3>
+            <div id="filter-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="filter-group">
+                    <span class="font-semibold text-gray-700 block mb-2">Can you create a proprietary (closed-source) application?</span>
+                    <div class="flex space-x-2">
+                        <input type="checkbox" id="filter-proprietary" value="allowsProprietary" class="hidden filter-checkbox">
+                        <label for="filter-proprietary" class="cursor-pointer border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Yes</label>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <span class="font-semibold text-gray-700 block mb-2">Does it have an explicit patent grant?</span>
+                    <div class="flex space-x-2">
+                         <input type="checkbox" id="filter-patent" value="hasPatentGrant" class="hidden filter-checkbox">
+                        <label for="filter-patent" class="cursor-pointer border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Yes</label>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <span class="font-semibold text-gray-700 block mb-2">What level of "Share-Alike" (Copyleft) is required?</span>
+                     <div class="flex flex-wrap gap-2">
+                        <input type="checkbox" id="filter-copyleft-none" value="copyleft-none" class="hidden filter-checkbox copyleft-filter">
+                        <label for="filter-copyleft-none" class="cursor-pointer border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">None (Permissive)</label>
+                        <input type="checkbox" id="filter-copyleft-weak" value="copyleft-weak" class="hidden filter-checkbox copyleft-filter">
+                        <label for="filter-copyleft-weak" class="cursor-pointer border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Weak</label>
+                        <input type="checkbox" id="filter-copyleft-strong" value="copyleft-strong" class="hidden filter-checkbox copyleft-filter">
+                        <label for="filter-copyleft-strong" class="cursor-pointer border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Strong</label>
+                    </div>
+                </div>
+                 <div class="filter-group flex items-end">
+                    <button id="reset-filters" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md transition w-full sm:w-auto">Reset All Filters</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="license-grid-container">
+            <div id="license-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
+            <p id="no-results" class="text-center text-gray-500 text-lg py-12 hidden">No licenses match your selected filters.</p>
+        </section>
+
+        <section id="comparison-chart" class="my-16 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-bold mb-4 text-gray-900 text-center">License Permissiveness Spectrum</h2>
+            <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">This chart provides a visual comparison of licenses, from the most restrictive (strong copyleft) to the most permissive (public domain). A higher score indicates fewer restrictions and obligations. Click a bar to highlight the license card above.</p>
+            <div class="chart-container">
+                <canvas id="permissivenessChart"></canvas>
+            </div>
+        </section>
+
+        <section id="license-groups" class="my-12">
+            <h2 class="text-2xl font-bold mb-6 text-gray-900 text-center">Explore License Groupings</h2>
+            <div id="accordion-container" class="space-y-4 max-w-4xl mx-auto">
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-gray-400">
+            <p>Interactive Open Source License Explorer</p>
+            <p class="text-sm">This tool is for informational purposes only and does not constitute legal advice.</p>
+        </div>
+    </footer>
+
+    <div id="modal" class="modal-bg">
+        <div class="bg-white rounded-lg shadow-2xl w-11/12 md:max-w-3xl lg:max-w-4xl modal-content">
+            <div class="sticky top-0 bg-white p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center rounded-t-lg">
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-900"></h3>
+                <button id="modal-close" class="text-gray-500 hover:text-gray-800 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-body" class="p-4 sm:p-6">
+            </div>
+        </div>
+    </div>
+    <!-- Links to the external JavaScript file -->
+    <script src="js/jscript.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+name = "open-source-license-explorer"
+compatibility_date = "2025-08-13"
+
+routes = [
+  { pattern = "opensource.pierrefouquet.co.uk", custom_domain = true }
+]
+
+[assets]
+directory = "./public"
+
+[observability.logs]
+enabled = true

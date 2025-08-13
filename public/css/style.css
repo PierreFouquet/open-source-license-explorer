@@ -1,0 +1,47 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 500px;
+    max-height: 60vh;
+}
+.modal-bg {
+    display: none;
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.license-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.license-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.filter-checkbox:checked + label {
+    background-color: #0d9488;
+    color: white;
+    border-color: #0d9488;
+}
+.highlight {
+    box-shadow: 0 0 0 3px #0d9488;
+    transform: scale(1.02);
+}
